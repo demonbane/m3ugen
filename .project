@@ -14,11 +14,4 @@
 	<natures>
 		<nature>org.epic.perleditor.perlnature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>m3ugen.pl</name>
-			<type>1</type>
-			<location>/usr/local/bin/m3ugen</location>
-		</link>
-	</linkedResources>
 </projectDescription>
