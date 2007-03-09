@@ -1,0 +1,17 @@
+m3ugen (0.12) unstable; urgency=low
+
+  * Improved UTF-8 support. All filehandles are now explicitly opened as UTF-8.
+  * Added a requirement for Encode (one of the base Perl modules) to handle UTF-8 strings.
+  * Added the -v flag to show the current version of m3ugen.
+  * First version to be committed to new SVN repository.
+
+ -- Alex Malinovich <demonbane@the-love-shack.net>  Sun, 24 Dec 2006 19:00:02 -0800
+  
+m3ugen (0.11) unstable; urgency=low
+
+  * Initial release.
+  * Why, is this a Debian changelog? Yes, yes it is. But this isn't a Debian package? No, no it's not. But I use a Debian system, and since Debian already has these wonderfully helpful tools written for me already, why not use them?
+
+ -- Alex Malinovich <demonbane@the-love-shack.net>  Sun, 24 Dec 2006 17:21:44 -0800
+
+
