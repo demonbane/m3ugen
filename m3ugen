@@ -15,12 +15,8 @@
 # 	tags appropriately, however it has not been accepted into
 # 	upstream yet. Using the patch this version of m3ugen will
 # 	properly sort by disc number as well as album.
-#
-# TODO:	Make sure that all code is Unicode-friendly. Since OGG tags
-# 	can be in Unicode the code should handle those strings
-# 	appropriately.
 
-$version="0.12";
+$version="0.13";
 
 use Audio::File;
 use Cwd;
@@ -30,7 +26,7 @@ use File::Find;
 use Getopt::Mixed 1.006;
 use IO::Handle;
 
-Getopt::Mixed::init("r recursive>r n no-path>n h help>h usage>h d debug>d a albums>a v version>v");
+Getopt::Mixed::init("r recursive>r n no-path>n h help>h usage>h d debug>d a albums>a v version>v p=s pattern>p");
 $Getopt::Mixed::ignoreCase = 0;
 Getopt::Mixed::getOptions();
 
@@ -38,6 +34,9 @@ if ($opt_h) {
   print "Usage: m3ugen [OPTION]... SOURCE [M3UFILE]\n";
   print "Output an m3u playlist containing mp3, Ogg Vorbis, and FLAC files found in\n";
   print "SOURCE to M3UFILE if specified, STDOUT otherwise.\n\n";
+  print "PATTERN specifies the pattern to use when writing the M3U info line using\n";
+  print "the following variables: %a = artist, %t = track title, %n = track number\n";
+  print "                         %b = album, %d = disc number [if available]\n\n";
   print "  -h, --help         display this screen and exit\n\n";
   print "  -r, --recursive    recursively search through directories\n";
   print "                     (default is specified directory ONLY)\n\n";
@@ -45,6 +44,8 @@ if ($opt_h) {
   print "                     (implies M3UFILE behavior and ignores M3UFILE if specified)\n\n";
   print "  -n, --no-path      print paths relative to SOURCE\n";
   print "                     (default is to print full path)\n\n";
+  print "  -p PATTERN,        quoted pattern to use for printing title in M3UFILE\n";
+  print "  --pattern=PATTERN  (Examples: '%n - %t' or '%a.%b.%t')\n\n";
   print "  -d, --debug        print debugging output to STDERR\n\n";
   print "  -v, --version      print version information and exit\n\n";
   exit 0;
@@ -151,7 +152,23 @@ foreach $filename (@files) {
   print ERROR "title = \"$title\"\n";
   print ERROR "length = \"$length\"\n";
 
-  $m3ulines = "#EXTINF:".$length.",".$artist." - ".$title."\n";
+  $m3ulines = "#EXTINF:".$length.","; #default info
+  if ($opt_p) {
+    my $formattedline = $opt_p;
+
+    # I'm sure there must be a better way to do this, but this'll
+    # work for the time being.
+    $formattedline =~ s/%a/$artist/g;
+    $formattedline =~ s/%b/$album/g;
+    $formattedline =~ s/%d/$disc/g;
+    $formattedline =~ s/%n/$track/g;
+    $formattedline =~ s/%t/$title/g;
+    $m3ulines .= $formattedline;
+  }else{
+    $m3ulines .= $artist." - ".$title;
+  }
+  $m3ulines .= "\n";
+
   if ($opt_n) {
     my $templine = ($filename ^ $workDir);
     # Remove any leading NULL characters. They cause problems in some

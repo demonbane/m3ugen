@@ -1,3 +1,10 @@
+m3ugen (0.13) unstable; urgency=low
+
+  * Added pattern functionality for M3U info lines. See 'm3ugen --help'
+  * Cleaned up the --help screen a bit.
+
+ -- Alex Malinovich <demonbane@the-love-shack.net>  Fri,  9 Mar 2007 04:33:07 -0800
+
 m3ugen (0.12) unstable; urgency=low
 
   * Improved UTF-8 support. All filehandles are now explicitly opened as UTF-8.
