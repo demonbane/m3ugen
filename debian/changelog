@@ -1,3 +1,10 @@
+m3ugen (0.13-2) unstable; urgency=low
+
+  * Added standard COPYING, INSTALL, AUTHORS, and TODO files, preparing for a
+    tarball.
+
+ -- Alex Malinovich <demonbane@the-love-shack.net>  Fri,  9 Mar 2007 18:51:33 -0800
+
 m3ugen (0.13-1) unstable; urgency=low
 
   * Added man page
