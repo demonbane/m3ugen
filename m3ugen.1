@@ -1,0 +1,151 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.\" First parameter, NAME, should be all caps
+.\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
+.\" other parameters are allowed: see man(7), man(1)
+.TH M3UGEN 1 "March  9, 2007"
+.\" Please adjust this date whenever revising the manpage.
+.\"
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .br        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
+.SH NAME
+m3ugen \- m3u playlist generator
+.SH SYNOPSIS
+.B m3ugen
+.RI [ options ] " source " [ m3ufile ]
+.SH DESCRIPTION
+.B m3ugen
+is a simple m3u playlist generator. It's written in Perl and supports FLAC, MP3, and Ogg Vorbis format tags, though additional formats can be added by simply extending Audio::File (libaudiofile-perl in Debian).
+
+m3ugen will scan a directory (identified by 
+.IR source )
+and all media files in it, and then generate a playlist sorted by disc number (if available) and track number. You can optionally supply the
+.B -p
+option to specify a
+.I pattern
+for the info line (see section
+.BR PATTERNS ).
+.PP
+.\" TeX users may be more comfortable with the \fB<whatever>\fP and
+.\" \fI<whatever>\fP escape sequences to invode bold face and italics, 
+.\" respectively.
+.\"fBogmrip\fP is a program that...
+.SH OPTIONS
+This program follows the usual GNU command line syntax, with long
+options starting with two dashes (`--').
+A summary of options is included below.
+.TP
+.B \-h, \-\-help
+Show summary of options.
+.TP
+.B \-r, \-\-recursive
+recursively search through directories (default is specified directory ONLY)
+.TP
+.B \-a, \-\-albums
+create
+.IR albumname .m3u
+for each album in
+.I source
+(implies
+.I m3ufile
+behavior and ignores
+.I m3ufile
+if specified)
+.TP 
+.B \-n, \-\-no\-path
+print paths relative to
+.I source
+(default is to print full path)
+.TP
+.BI \-p " pattern" ", \-\-pattern=" pattern
+quoted pattern to use for printing title in
+.I m3ufile
+.RB (see " PATTERNS " and " EXAMPLES " below)
+.TP
+.B \-d, \-\-debug
+print debugging output to STDERR
+.TP
+.B \-v, \-\-version
+print version information and exit
+.SH PATTERNS
+.B m3ugen
+uses EasyTag-style options for specifying a format for the m3u info line. The following options are currently supported:
+.TP 
+.B %a
+The album
+.I artist
+.TP
+.B %t
+The track
+.I title
+.TP
+.B %n
+The track
+.I number
+.TP
+.B %b
+The
+.I album name
+.TP
+.B %d
+The
+.I disc number
+(if available)
+.PP
+All other characters will be left as they are. Remember that if you are going to include spaces as part of the format, you will need to quote the entire string. See
+.B EXAMPLES
+for examples using the PATTERN parameter.
+.SH EXAMPLES
+.TP
+.B m3ugen /home/myname/music
+.PP
+Scan
+.B /home/myname/music
+(non-recursively) for filenames ending in
+.RI ( .flac | .mp3 | .ogg )
+(case-insensitive), read their tags, and print a playlist to STDOUT sorted by
+.I disc number
+(if available) and track
+.I number.
+.TP
+.B m3ugen -ra /home/myname/music
+.PP
+.I Recursively
+scan
+.B /home/myname/music
+for filenames ending in
+.RI ( .flac | .mp3 | .ogg )
+and generate playlists named
+.IR albumname .m3u.
+For example, an album called 
+\*(lqFoo Bar\*(rq
+would result in a playlist called
+.BR "Foo Bar.m3u" .
+If more than one
+.I album name
+is found in the tags, a separate playlist will be generated for each album.
+.TP
+.B m3ugen -ra --no-path --pattern="%n - %t" music/foo/bar
+.PP
+Recursively scan
+.B music/foo/bar
+for filenames ending in
+.RI ( .flac | .mp3 | .ogg )
+and generate playlists named
+.IR albumname .m3u.
+Print the info lines in the playlist as
+.B 1 - The Foobar Song
+and only print the relevant portion of the path to the playlist. (Useful for including a playlist with a collection of songs that might be copied to another computer or otherwise moved to another location.)
+.SH SEE ALSO
+.BR easytag (1),
+.BR Audio::File (3)
+.SH AUTHOR
+Alex Malinovich <demonbane@the-love-shack.net>
+

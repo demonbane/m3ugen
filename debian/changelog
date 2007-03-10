@@ -1,3 +1,12 @@
+m3ugen (0.13-1) unstable; urgency=low
+
+  * Added man page
+  * Added a symlink from debian/changelog to changelog, in case any non-Debian
+    users get confused. I think that for the next release I may just make it
+    into a proper Debian package.
+
+ -- Alex Malinovich <demonbane@the-love-shack.net>  Fri,  9 Mar 2007 18:39:15 -0800
+
 m3ugen (0.13) unstable; urgency=low
 
   * Added pattern functionality for M3U info lines. See 'm3ugen --help'
