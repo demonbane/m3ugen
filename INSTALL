@@ -1,0 +1,3 @@
+Sorry, no nice installation script just yet. You can either run the file
+directly or drop it into your /usr/local/bin and run it anywhere. If you want
+to use the man page you should copy m3ugen.1 into /usr/local/share/man/man1/.

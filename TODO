@@ -1,0 +1,4 @@
+* Put together a decent installation Makefile.
+* Create a full-blown Debian package as we're already using Debian tools for
+  changelogs, etc.
+* Add an option to still print the playlist to STDOUT when using the -a flag.
