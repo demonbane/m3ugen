@@ -16,7 +16,7 @@
 # 	upstream yet. Using the patch this version of m3ugen will
 # 	properly sort by disc number as well as album.
 
-$version="0.13";
+$version="0.14";
 
 use Audio::File;
 use Cwd;
@@ -78,7 +78,7 @@ if ($opt_d) {
 
 print ERROR "SOURCE = \"$ARGV[0]\"\nM3UFILE = \"$ARGV[1]\"\n";
 
-$workDir = Cwd::abs_path($ARGV[0])."/";
+$workDir = decode_utf8(Cwd::abs_path($ARGV[0])."/");
 
 $currentDir = getcwd();
 
@@ -170,11 +170,7 @@ foreach $filename (@files) {
   $m3ulines .= "\n";
 
   if ($opt_n) {
-    my $templine = ($filename ^ $workDir);
-    # Remove any leading NULL characters. They cause problems in some
-    # media players.
-    $templine =~ s/\x00+//;
-    $m3ulines .= $templine;
+    $m3ulines .= basename($filename);
   }else {
     $m3ulines .= $filename;
   }
@@ -184,6 +180,8 @@ foreach $filename (@files) {
   print ERROR "m3ulines = \"$m3ulines\"\n";
 }
 
+$needextm3u = 1;
+
 foreach $albumname (keys %writeme) {
   if ($opt_a) {
     print ERROR "Generating -a list\n";
@@ -192,7 +190,10 @@ foreach $albumname (keys %writeme) {
   }else{
     print ERROR "Generating standard list\n";
   }
-  print OUTPUT "#EXTM3U\n";
+  if ($needextm3u) {
+    print OUTPUT "#EXTM3U\n";
+    $needextm3u = 0;
+  }
   print ERROR "albumname = \"$albumname\"\n";
   for ($discnumber = 0; $discnumber < ($#{$writeme{$albumname}} + 1); $discnumber++) {
     print ERROR "discnumber = \"".($discnumber+1)."\"\n";
