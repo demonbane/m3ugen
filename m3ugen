@@ -25,8 +25,12 @@ use File::Basename;
 use File::Find;
 use Getopt::Mixed 1.006;
 use IO::Handle;
+use Term::ReadKey;
 
-Getopt::Mixed::init("r recursive>r n no-path>n h help>h usage>h d debug>d a albums>a v version>v p=s pattern>p");
+($termwidth)=GetTerminalSize(STDERR);
+$splitline="-" x $termwidth;
+
+Getopt::Mixed::init("r recursive>r n no-path>n h help>h usage>h d debug>d D stdebug>D a albums>a v version>v p=s pattern>p");
 $Getopt::Mixed::ignoreCase = 0;
 Getopt::Mixed::getOptions();
 
@@ -46,7 +50,8 @@ if ($opt_h) {
   print "                     (default is to print full path)\n\n";
   print "  -p PATTERN,        quoted pattern to use for printing title in M3UFILE\n";
   print "  --pattern=PATTERN  (Examples: '%n - %t' or '%a.%b.%t')\n\n";
-  print "  -d, --debug        print debugging output to STDERR\n\n";
+  print "  -d, --debug        print debugging output to STDERR\n";
+  print "  -D, --stdebug      print debugging output to STDOUT\n\n";
   print "  -v, --version      print version information and exit\n\n";
   exit 0;
 }
@@ -74,11 +79,14 @@ open(ERROR,">:utf8", "/dev/null");
 if ($opt_d) {
   ERROR->fdopen(STDERR, "w");
   binmode ERROR, ":utf8";
+}elsif ($opt_D) {
+  ERROR->fdopen(STDOUT, "w");
+  binmode ERROR, ":utf8";
 }
 
 print ERROR "SOURCE = \"$ARGV[0]\"\nM3UFILE = \"$ARGV[1]\"\n";
 
-$workDir = decode_utf8(Cwd::abs_path($ARGV[0])."/");
+$workDir = mkvalidutf(Cwd::abs_path($ARGV[0])."/");
 
 $currentDir = getcwd();
 
@@ -97,22 +105,26 @@ if ($opt_r) {
     print ERROR "found file = \"$_\"\n";
     push(@files,$workDir.$_);
   }
-#  push(@files,glob("*.[Oo][Gg][Gg]"));
-#  push(@files,glob("*.[Ff][Ll][Aa][Cc]"));
-#  push(@files,glob("*.[Mm][Pp]3"));
 }
 
 foreach $filename (@files) {
-  my $mediaFile = Audio::File->new("$filename");
   $filename = decode_utf8($filename);
-  $artist = decode_utf8($mediaFile->tag->artist());
-  $album = decode_utf8($mediaFile->tag->album());
+  print ERROR "$splitline";
+  print ERROR "Processing filename = \"$filename\"\n";
+  my $mediaFile = Audio::File->new("$filename");
+  print ERROR "Loaded mediaFile\n";
+  $artist = mkvalidutf($mediaFile->tag->artist());
+  print ERROR "Loaded artist (\"$artist\")\n";
+  $album = mkvalidutf($mediaFile->tag->album());
+  print ERROR "Loaded album (\"$album\")\n";
   $disc = $mediaFile->tag->disc();
+  print ERROR "Loaded disc (\"$disc\")\n";
   $track = abs($mediaFile->tag->track());
-  $title = decode_utf8($mediaFile->tag->title());
+  print ERROR "Loaded track (\"$track\")\n";
+  $title = mkvalidutf($mediaFile->tag->title());
+  print ERROR "Loaded title (\"$title\")\n";
   $length = $mediaFile->audio_properties->length();
-
-  print ERROR "artist = \"$artist\"\n";
+  print ERROR "Loaded length (\"$length\")\n";
 
   # The reason we're checking both track and album at the same time
   # here is because if we don't know the album the user is probably
@@ -137,27 +149,17 @@ foreach $filename (@files) {
     print ERROR "Assuming track \"".$uniq++."\" due to \"$track\".\n";
     $album = "Unknown Album Name";
     $track = $uniq;
-  }else {
-    print ERROR "album = \"$album\"\n";
-    print ERROR "track = \"$track\"\n";
   }
 
   if (!$disc) {
     print ERROR "Unknown disc number. Assuming 1.\n";
     $disc = 1;
-  }else {
-    print ERROR "disc = \"$disc\"\n";
   }
-
-  print ERROR "title = \"$title\"\n";
-  print ERROR "length = \"$length\"\n";
 
   $m3ulines = "#EXTINF:".$length.","; #default info
   if ($opt_p) {
     my $formattedline = $opt_p;
 
-    # I'm sure there must be a better way to do this, but this'll
-    # work for the time being.
     $formattedline =~ s/%a/$artist/g;
     $formattedline =~ s/%b/$album/g;
     $formattedline =~ s/%d/$disc/g;
@@ -184,6 +186,7 @@ $needextm3u = 1;
 
 foreach $albumname (keys %writeme) {
   if ($opt_a) {
+    print ERROR "$splitline";
     print ERROR "Generating -a list\n";
     close OUTPUT;
     open(OUTPUT,">:utf8", "$currentDir/$albumname.m3u") || die "Could not open $albumname.m3u for writing!\n";
@@ -207,8 +210,9 @@ close ERROR;
 close OUTPUT;
 
 sub wanted {
+  $_ = mkvalidutf($_);
   if (-f $_) {
-    print ERROR "-----------------\n";
+    print ERROR "$splitline";
     print ERROR "checking \"$_\"\n";
     my @fileParts = split(/\./);
     my $fileExt = lc(pop(@fileParts));
@@ -217,5 +221,13 @@ sub wanted {
       print ERROR "adding \"$_\" to \@files\n";
       push(@files, $File::Find::name);
     }
+  }
+}
+
+sub mkvalidutf {
+  if (!utf8::is_utf8($_[0])) {
+    return decode_utf8($_[0]);
+  }else{
+    return $_[0];
   }
 }

@@ -1,3 +1,24 @@
+m3ugen (0.15) unstable; urgency=low
+
+  * This is the version that 0.14 should have been, had I done more work on
+    it. But as I've been in the teens for a long time with versioning, I
+    figured this was a good time to make some progress.
+  * Fixed some of the UTF8 handling code. Turns out that decode_utf8 doesn't
+    like being passed strings which are already OK. So we now have the
+    mkvalidutf subroutine to take care of that for us.
+  * Fixed a bug with some filenames not being handled properly. (We were
+    checking for valid UTF8 in a filename AFTER trying to open it... whoops.)
+  * Added the --stdebug option. Same as --debug, except it prints to STDOUT.
+    (I got tired of doing m3ugen -d somedir 2>&1 |less)
+  * Cleaned up the debugging code to provide information about what's being
+    found and what's being used to be a bit more compact and to make a bit
+    more sense (I hope).
+  * Created an "intelligent" separator line. It's made up of as many dashes as
+    can fit on the current width of the terminal.
+  * Cleaned out some old comments.
+
+ -- Alex Malinovich <demonbane@the-love-shack.net>  Thu, 13 Sep 2007 13:35:00 -0700
+
 m3ugen (0.14) unstable; urgency=low
 
   * Updated to use File::Basename instead of old hacked together string
