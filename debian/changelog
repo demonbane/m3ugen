@@ -1,3 +1,21 @@
+m3ugen (0.16) unstable; urgency=low
+
+  * This is the REAL 0.16. Not to be confused with the fake 0.15 that was 0.15
+    except that it wasn't... (see commit 16 for details)
+  * Fixed a bug that would cause an empty playlist to get created if -a was
+    specified along with an output file. You'll now get a warning and some
+    halfway intelligent behavior.
+  * A lot mote UTF8 cleanup stuff. I've pulled out most of the explicit
+    handling, choosing instead to let Perl do whatever it thinks is best. We
+    just convert the text that's going to be written to the file to UTF8 and
+    let Perl and the OS decide amongst themselves how to handle all of the
+    file-related stuff.
+  * Removed some redundant code that didn't really do anything.
+  * Added a few additional debugging messages that I needed while doing all of
+    the above stuff.
+
+ -- Alex Malinovich <demonbane@the-love-shack.net>  Sat, 15 Sep 2007 16:11:11 -0700
+
 m3ugen (0.15) unstable; urgency=low
 
   * This is the version that 0.14 should have been, had I done more work on

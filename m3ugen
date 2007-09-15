@@ -16,7 +16,7 @@
 # 	upstream yet. Using the patch this version of m3ugen will
 # 	properly sort by disc number as well as album.
 
-$version="0.14";
+$version="0.16";
 
 use Audio::File;
 use Cwd;
@@ -69,6 +69,10 @@ if (!$ARGV[0]) {
 
 if ($ARGV[1]) {
   open(OUTPUT,">:utf8",$ARGV[1]) || die "Could not open $ARGV[1] for writing!\n";
+  if ($opt_a) {
+    print "Album (-a) option was specified along with an output filename.\nIgnoring -a and writing all output to $ARGV[1] instead.\n";
+    undef($opt_a);
+  }
 }else {
   OUTPUT->fdopen(STDOUT, "w") || die "Could not redirect output!\n";
   binmode OUTPUT, ":utf8";
@@ -86,42 +90,40 @@ if ($opt_d) {
 
 print ERROR "SOURCE = \"$ARGV[0]\"\nM3UFILE = \"$ARGV[1]\"\n";
 
-$workDir = mkvalidutf(Cwd::abs_path($ARGV[0])."/");
+$workDir = Cwd::abs_path($ARGV[0])."/";
 
 $currentDir = getcwd();
 
+print ERROR "workDir = $workDir\ncurrentDir = $currentDir\n";
+
 #for creating unique track numbers
 $uniq = 1;
-
-if (substr($workDir,0,1) ne '/') {
-  $workDir = getcwd()."\/".$workDir;
-}
 
 if ($opt_r) {
   find(\&wanted, $workDir);
 }else {
   chdir($workDir);
   foreach (glob("*.[Oo][Gg][Gg]"),glob("*.[Ff][Ll][Aa][Cc]"),glob("*.[Mm][Pp]3")) {
-    print ERROR "found file = \"$_\"\n";
-    push(@files,$workDir.$_);
+    my $curfile = $_;
+    print ERROR "found file = \"$curfile\"\n";
+    push(@files,$workDir.$curfile);
   }
 }
 
 foreach $filename (@files) {
-  $filename = decode_utf8($filename);
   print ERROR "$splitline";
   print ERROR "Processing filename = \"$filename\"\n";
   my $mediaFile = Audio::File->new("$filename");
   print ERROR "Loaded mediaFile\n";
-  $artist = mkvalidutf($mediaFile->tag->artist());
+  $artist = $mediaFile->tag->artist();
   print ERROR "Loaded artist (\"$artist\")\n";
-  $album = mkvalidutf($mediaFile->tag->album());
+  $album = $mediaFile->tag->album();
   print ERROR "Loaded album (\"$album\")\n";
   $disc = $mediaFile->tag->disc();
   print ERROR "Loaded disc (\"$disc\")\n";
   $track = abs($mediaFile->tag->track());
   print ERROR "Loaded track (\"$track\")\n";
-  $title = mkvalidutf($mediaFile->tag->title());
+  $title = $mediaFile->tag->title();
   print ERROR "Loaded title (\"$title\")\n";
   $length = $mediaFile->audio_properties->length();
   print ERROR "Loaded length (\"$length\")\n";
@@ -178,6 +180,7 @@ foreach $filename (@files) {
   }
   $m3ulines .= "\n";
 
+  $m3ulines = mkvalidutf($m3ulines);
   $writeme{$album}[$disc - 1][$track - 1] = $m3ulines;
   print ERROR "m3ulines = \"$m3ulines\"\n";
 }
@@ -210,17 +213,19 @@ close ERROR;
 close OUTPUT;
 
 sub wanted {
-  $_ = mkvalidutf($_);
-  if (-f $_) {
+  my $curfile = $File::Find::name;
+  if (-f $curfile) {
     print ERROR "$splitline";
-    print ERROR "checking \"$_\"\n";
+    print ERROR "checking \"$curfile\"\n";
     my @fileParts = split(/\./);
     my $fileExt = lc(pop(@fileParts));
     print ERROR "fileExt = \"$fileExt\"\n";
     if ($fileExt eq "ogg" || $fileExt eq "flac" || $fileExt eq "mp3") {
-      print ERROR "adding \"$_\" to \@files\n";
-      push(@files, $File::Find::name);
+      print ERROR "adding \"$curfile\" to \@files\n";
+      push(@files, $curfile);
     }
+  }else{
+    print ERROR "Skipping invalid file \"$curfile\"\n";
   }
 }
 
