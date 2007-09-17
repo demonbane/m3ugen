@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 # m3ugen - Recursive, multi-format m3u generation tool
-# (c) 2004, 2005 Alex Malinovich (demonbane@the-love-shack.net)
+# (c) 2004-2007 Alex Malinovich (demonbane@the-love-shack.net)
 # Released under the GPL
 # See www.fsf.org for a full copy of the GPL.
 
@@ -16,7 +16,7 @@
 # 	upstream yet. Using the patch this version of m3ugen will
 # 	properly sort by disc number as well as album.
 
-$version="0.16";
+$version="0.17";
 
 use Audio::File;
 use Cwd;
@@ -119,8 +119,13 @@ foreach $filename (@files) {
   print ERROR "Loaded artist (\"$artist\")\n";
   $album = $mediaFile->tag->album();
   print ERROR "Loaded album (\"$album\")\n";
-  $disc = $mediaFile->tag->disc();
-  print ERROR "Loaded disc (\"$disc\")\n";
+  if (${$mediaFile->tag->all()}{"disc"}) {
+    $disc = $mediaFile->tag->disc();
+    print ERROR "Loaded disc (\"$disc\")\n";
+  }else{
+    $disc = undef;
+    print ERROR "\"disc\" tag not supported by this version of Audio::File, skipping\n";
+  }
   $track = abs($mediaFile->tag->track());
   print ERROR "Loaded track (\"$track\")\n";
   $title = $mediaFile->tag->title();
