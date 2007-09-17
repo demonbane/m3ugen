@@ -1,3 +1,9 @@
+m3ugen (0.17-2) unstable; urgency=low
+
+  * Fixed rules to include changelog in package.
+
+ -- Alex Malinovich <demonbane@the-love-shack.net>  Mon, 17 Sep 2007 03:07:41 -0700
+
 m3ugen (0.17-1) unstable; urgency=low
 
   * Converting to native debian package in subversion. From this point will

@@ -40,6 +40,7 @@ binary-indep: build install
 	dh_installdocs
 	dh_installexamples
 	dh_installman m3ugen.1
+	dh_installchangelogs
 	dh_link
 	dh_compress
 	dh_fixperms
