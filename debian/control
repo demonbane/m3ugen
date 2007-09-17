@@ -1,0 +1,18 @@
+Source: m3ugen
+Section: sound
+Priority: extra
+Maintainer: Alex Malinovich <demonbane@the-love-shack.net>
+Build-Depends: debhelper (>= 5)
+Standards-Version: 3.7.2
+
+Package: m3ugen
+Architecture: all
+Depends: ${perl:Depends}, libaudio-file-perl, libgetopt-mixed-perl, libterm-readkey-perl
+Description: Simple m3u playlist generator
+ m3ugen is a simple m3u playlist generator. It’s written in Perl and
+ supports FLAC, MP3, and Ogg Vorbis format tags, though additional formats
+ can be added by simply extending Audio::File (libaudio-file-perl in Debian).
+ .
+ m3ugen will scan a directory (identified by source) and all media files in
+ it, and then generate a playlist sorted by disc number (if available) and
+ track number.
