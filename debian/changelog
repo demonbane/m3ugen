@@ -1,8 +1,18 @@
+m3ugen (0.18) unstable; urgency=low
+
+  * Fixed a small bug causing only the first file in a group to have the
+    EXTM3U header if the -a switch was used.
+  * Added some informational output informing a user when a file has been
+    written. It was disconcerting to create a dozen playlists automatically and
+    have the program produce 0 lines of visible output. :)
+
+ -- Alex Malinovich <demonbane@the-love-shack.net>  Tue, 16 Oct 2007 14:02:50 -0700
+
 m3ugen (0.17-2) unstable; urgency=low
 
   * Fixed rules to include changelog in package.
 
- -- Alex Malinovich <demonbane@the-love-shack.net>  Mon, 17 Sep 2007 03:07:41 -0700
+ -- Alex Malinovich <demonbane@the-love-shack.net>  Tue, 16 Oct 2007 14:00:18 -0700
 
 m3ugen (0.17-1) unstable; urgency=low
 

@@ -16,7 +16,7 @@
 # 	upstream yet. Using the patch this version of m3ugen will
 # 	properly sort by disc number as well as album.
 
-$version="0.17";
+$version="0.18";
 
 use Audio::File;
 use Cwd;
@@ -69,6 +69,7 @@ if (!$ARGV[0]) {
 
 if ($ARGV[1]) {
   open(OUTPUT,">:utf8",$ARGV[1]) || die "Could not open $ARGV[1] for writing!\n";
+  $outputfilename = $ARGV[1];
   if ($opt_a) {
     print "Album (-a) option was specified along with an output filename.\nIgnoring -a and writing all output to $ARGV[1] instead.\n";
     undef($opt_a);
@@ -198,12 +199,15 @@ foreach $albumname (keys %writeme) {
     print ERROR "Generating -a list\n";
     close OUTPUT;
     open(OUTPUT,">:utf8", "$currentDir/$albumname.m3u") || die "Could not open $albumname.m3u for writing!\n";
+    $outputfilename = "$albumname.m3u";
   }else{
     print ERROR "Generating standard list\n";
   }
   if ($needextm3u) {
     print OUTPUT "#EXTM3U\n";
-    $needextm3u = 0;
+    if (!$opt_a) {
+      $needextm3u = 0;
+    }
   }
   print ERROR "albumname = \"$albumname\"\n";
   for ($discnumber = 0; $discnumber < ($#{$writeme{$albumname}} + 1); $discnumber++) {
@@ -212,6 +216,7 @@ foreach $albumname (keys %writeme) {
       print OUTPUT $songname;
     }
   }
+  print STDERR "Wrote \"$outputfilename\"\n";
 }
 
 close ERROR;
