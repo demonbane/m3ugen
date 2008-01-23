@@ -5,8 +5,11 @@ m3ugen (0.18) unstable; urgency=low
   * Added some informational output informing a user when a file has been
     written. It was disconcerting to create a dozen playlists automatically and
     have the program produce 0 lines of visible output. :)
+  * Added more debugging output (for mkvalidutf)
+  * Altered m3uline generation to try and ensure that all output is valid utf.
+    See diff for details.
 
- -- Alex Malinovich <demonbane@the-love-shack.net>  Tue, 16 Oct 2007 14:02:50 -0700
+ -- Alex Malinovich <demonbane@the-love-shack.net>  Tue, 22 Jan 2008 19:50:45 -0800
 
 m3ugen (0.17-2) unstable; urgency=low
 
