@@ -16,7 +16,7 @@
 # 	upstream yet. Using the patch this version of m3ugen will
 # 	properly sort by disc number as well as album.
 
-$version="0.18";
+$version="0.19";
 
 use Audio::File;
 use Cwd;
@@ -113,7 +113,9 @@ if ($opt_r) {
   find(\&wanted, $workDir);
 }else {
   chdir($workDir);
-  foreach (glob("*.[Oo][Gg][Gg]"),glob("*.[Ff][Ll][Aa][Cc]"),glob("*.[Mm][Pp]3")) {
+  foreach (glob("*.[Oo][Gg][Gg]"),glob("*.[Ff][Ll][Aa][Cc]"),
+	   glob("*.[Mm][Pp][34]"),glob("*.[Aa][Aa][Cc]"),
+	   glob("*.[Mm]4[Aa]")) {
     my $curfile = $_;
     print ERROR "found file = \"$curfile\"\n";
     push(@files,$workDir.$curfile);
@@ -240,7 +242,8 @@ sub wanted {
     my @fileParts = split(/\./);
     my $fileExt = lc(pop(@fileParts));
     print ERROR "fileExt = \"$fileExt\"\n";
-    if ($fileExt eq "ogg" || $fileExt eq "flac" || $fileExt eq "mp3") {
+    if ($fileExt eq "ogg" || $fileExt eq "mp3" || $fileExt eq "flac" ||
+	$fileExt eq "aac" || $fileExt eq "m4a" || $fileExt eq "mp4") {
       print ERROR "adding \"$curfile\" to \@files\n";
       push(@files, $curfile);
     }
