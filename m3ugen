@@ -36,7 +36,7 @@ Getopt::Mixed::getOptions();
 
 if ($opt_h) {
   print "Usage: m3ugen [OPTION]... SOURCE [M3UFILE]\n";
-  print "Output an m3u playlist containing mp3, Ogg Vorbis, and FLAC files found in\n";
+  print "Output an m3u playlist containing FLAC, MP3, MP4 and Ogg Vorbis files found in\n";
   print "SOURCE to M3UFILE if specified, STDOUT otherwise.\n\n";
   print "PATTERN specifies the pattern to use when writing the M3U info line using\n";
   print "the following variables: %a = artist, %t = track title, %n = track number\n";
