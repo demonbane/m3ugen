@@ -2,7 +2,7 @@
 .\" First parameter, NAME, should be all caps
 .\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
 .\" other parameters are allowed: see man(7), man(1)
-.TH M3UGEN 1 "March  9, 2007"
+.TH M3UGEN 1 "May  25, 2009"
 .\" Please adjust this date whenever revising the manpage.
 .\"
 .\" Some roff macros, for reference:
@@ -22,7 +22,7 @@ m3ugen \- m3u playlist generator
 .RI [ options ] " source " [ m3ufile ]
 .SH DESCRIPTION
 .B m3ugen
-is a simple m3u playlist generator. It's written in Perl and supports FLAC, MP3, and Ogg Vorbis format tags, though additional formats can be added by simply extending Audio::File (libaudiofile-perl in Debian).
+is a simple m3u playlist generator. It's written in Perl and supports FLAC, MP3, MP4 and Ogg Vorbis format tags, though additional formats can be added by simply extending Audio::File (libaudio-file-perl in Debian).
 
 m3ugen will scan a directory (identified by 
 .IR source )
@@ -109,7 +109,7 @@ for examples using the PATTERN parameter.
 Scan
 .B /home/myname/music
 (non-recursively) for filenames ending in
-.RI ( .flac | .mp3 | .ogg )
+.RI ( .aac | .flac | .mp3 | .m4a | .mp4 | .ogg )
 (case-insensitive), read their tags, and print a playlist to STDOUT sorted by
 .I disc number
 (if available) and track
@@ -121,7 +121,7 @@ Scan
 scan
 .B /home/myname/music
 for filenames ending in
-.RI ( .flac | .mp3 | .ogg )
+.RI ( .aac | .flac | .mp3 | .m4a | .mp4 | .ogg )
 and generate playlists named
 .IR albumname .m3u.
 For example, an album called 
@@ -137,7 +137,7 @@ is found in the tags, a separate playlist will be generated for each album.
 Recursively scan
 .B music/foo/bar
 for filenames ending in
-.RI ( .flac | .mp3 | .ogg )
+.RI ( .aac | .flac | .mp3 | .m4a | .mp4 | .ogg )
 and generate playlists named
 .IR albumname .m3u.
 Print the info lines in the playlist as
@@ -145,7 +145,7 @@ Print the info lines in the playlist as
 and only print the relevant portion of the path to the playlist. (Useful for including a playlist with a collection of songs that might be copied to another computer or otherwise moved to another location.)
 .SH SEE ALSO
 .BR easytag (1),
-.BR Audio::File (3)
+.BR Audio::File (3pm)
 .SH AUTHOR
 Alex Malinovich <demonbane@the-love-shack.net>
 
