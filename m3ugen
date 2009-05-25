@@ -1,20 +1,14 @@
 #!/usr/bin/perl
 
 # m3ugen - Recursive, multi-format m3u generation tool
-# (c) 2004-2007 Alex Malinovich (demonbane@the-love-shack.net)
+# (c) 2004-2009 Alex Malinovich (demonbane@the-love-shack.net)
 # Released under the GPL
 # See www.fsf.org for a full copy of the GPL.
 
-# BUGS: Currently, m3ugen will only sort the playlist based on
-#       the album and track number. It SHOULD also take into
-#       consideration the DISCNUMBER tag, if present. At this
-#       time, however, Audio::File (Audio::File::Tag to be
-#       exact) does NOT support the DISCNUMBER tag, so this
-#       feature cannot be implemented yet.
-# NOTE: I have written a patch for Audio::File to handle the disc
-# 	tags appropriately, however it has not been accepted into
-# 	upstream yet. Using the patch this version of m3ugen will
-# 	properly sort by disc number as well as album.
+# NOTE: This version of m3ugen relies on non-upstream changes to
+#	libaudio-file-perl (Audio::File). These changes are
+#	available in the forked version of the library available
+#	at http://github.com/demonbane/audio-file/tree/master
 
 $version="0.19";
 
