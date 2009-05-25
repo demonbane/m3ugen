@@ -1,3 +1,10 @@
+m3ugen (0.19) unstable; urgency=low
+
+  * Added mp4 support
+  * Updated documentation
+
+ -- Alex Malinovich <demonbane@the-love-shack.net>  Mon, 25 May 2009 03:33:04 -0700
+
 m3ugen (0.18) unstable; urgency=low
 
   * Fixed a small bug causing only the first file in a group to have the

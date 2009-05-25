@@ -3,11 +3,11 @@ m3ugen for Debian
 
 In order to make this package a well-behaved Debian package, it is shipping
 with a dependency on libaudio-file-perl. As of the writing of this document,
-libaudio-file-perl does not support the disc number tag in audio files. There
-is an outstanding bug (#337338) with a fix that has not been applied yet.
+libaudio-file-perl does not support disc number tags or MP4 files. This support
+has been added in a fork of the library available at
+http://github.com/demonbane/audio-file/tree/master
 
-Running m3ugen without this patch will still work just fine, but it will not
-properly sort songs by disc number. Applying the patch from the bug report
-will result in correct behavior.
+Running m3ugen without this version of the library should still work, but some
+of the functionality will not be present.
 
- -- Alex Malinovich <demonbane@the-love-shack.net>  Sun, 16 Sep 2007 23:49:15 -0700
+ -- Alex Malinovich <demonbane@the-love-shack.net>  Mon, 25 May 2009 03:30:04 -0700
